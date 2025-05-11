@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.core.TecHeart.mapper.ChatSessionMapper">
+
+    <resultMap id="sessionResultMap" type="com.core.TecHeart.entity.ChatSession">
+        <id property="sessionId" column="session_id" />
+        <result property="userId" column="user_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="sessionStatus" column="session_status"/>
+        <result property="title" column="title"/>
+        <result property="metaData" column="meta_data"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.core.TecHeart.entity.ChatSession">
+        INSERT INTO chat_sessions (
+        session_id, user_id, created_at,
+        updated_at, session_status, meta_data
+        ) VALUES (
+        #{sessionId}, #{userId}, #{createdAt},
+        #{updatedAt}, #{sessionStatus}, #{metaData}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.core.TecHeart.entity.ChatSession">
+        UPDATE chat_sessions SET
+        user_id = #{userId},
+        updated_at = #{updatedAt},
+        session_status = #{sessionStatus},
+        meta_data = #{metaData}
+        WHERE session_id = #{sessionId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM chat_sessions WHERE session_id = #{sessionId}
+    </delete>
+
+    <select id="selectBySessionId" resultMap="sessionResultMap">
+        SELECT * FROM chat_sessions WHERE session_id = #{sessionId}
+    </select>
+
+    <select id="selectByUserId" resultMap="sessionResultMap">
+        SELECT * FROM chat_sessions
+        WHERE user_id = #{userId}
+        ORDER BY updated_at DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.core.TecHeart.mapper.SymptomRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.core.TecHeart.entity.SymptomRecord">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="record_time" property="recordTime" />
+        <result column="symptom_type" property="symptomType" />
+        <result column="severity" property="severity" />
+        <result column="description" property="description" />
+    </resultMap>
+
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO symptom_records
+        (user_id, record_time, symptom_type, severity, description)
+        VALUES
+        (#{userId}, #{recordTime}, #{symptomType}, #{severity}, #{description})
+    </insert>
+
+    <update id="updateRecord">
+        UPDATE symptom_records
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="recordTime != null">record_time = #{recordTime},</if>
+            <if test="symptomType != null">symptom_type = #{symptomType},</if>
+            <if test="severity != null">severity = #{severity},</if>
+            <if test="description != null">description = #{description}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteRecord">
+        DELETE FROM symptom_records WHERE id = #{id}
+    </delete>
+
+    <select id="selectRecordById" resultMap="BaseResultMap">
+        SELECT * FROM symptom_records WHERE id = #{id}
+    </select>
+
+    <select id="selectRecordsByUserId" resultMap="BaseResultMap">
+        SELECT * FROM symptom_records WHERE user_id = #{userId}
+    </select>
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.core.TecHeart.mapper.UserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.core.TecHeart.entity.UserInfo">
+        <id column="user_info_id" property="userInfoId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="blood_type" property="bloodType" jdbcType="VARCHAR"/>
+        <result column="height" property="height" jdbcType="VARCHAR"/>
+        <result column="weight" property="weight" jdbcType="VARCHAR"/>
+        <result column="date_of_birth" property="dateOfBirth" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="VARCHAR"/>
+        <result column="has_allergy" property="hasAllergy" jdbcType="VARCHAR"/>
+        <result column="has_chronic_disease" property="hasChronicDisease" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="VARCHAR"/>
+        <result column="updated_at" property="updatedAt" jdbcType="VARCHAR"/>
+        <result column="username" property="userName" jdbcType="VARCHAR"/>
+        <result column="authority" property="authority" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_info_id, user_id, blood_type, height, weight,
+        date_of_birth, gender, has_allergy, has_chronic_disease, email, avatar,
+        created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.core.TecHeart.entity.UserInfo" useGeneratedKeys="true" keyProperty="userInfoId">
+        INSERT INTO user_info (
+        user_id, blood_type, height, weight,
+        date_of_birth, gender, has_allergy, has_chronic_disease, email, avatar,
+        created_at, updated_at
+        )
+        VALUES (
+        #{userId}, #{bloodType}, #{height}, #{weight},
+        #{dateOfBirth}, #{gender}, #{hasAllergy}, #{hasChronicDisease}, #{email}, #{avatar},
+        #{createdAt}, #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.core.TecHeart.entity.UserInfo">
+        UPDATE user_info
+        SET
+        blood_type = #{bloodType},
+        height = #{height},
+        weight = #{weight},
+        date_of_birth = #{dateOfBirth},
+        gender = #{gender},
+        has_allergy = #{hasAllergy},
+        has_chronic_disease = #{hasChronicDisease},
+        email = #{email},
+        avatar = #{avatar},
+        updated_at = #{updatedAt}
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM user_info
+        WHERE user_info_id = #{userInfoId}
+    </delete>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_info
+        WHERE user_info_id = #{userInfoId}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_info
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectAllUser" resultMap="BaseResultMap">
+        select  user.username,
+            user.authority,
+            user.time,
+            user.id as user_id,
+            user_info.email,
+            user_info.avatar
+        from user
+        left join user_info on user.id = user_info.user_id
+    </select>
+
+    <select id="search" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select  user.username,
+            user.authority,
+            user.time,
+            user_info.email,
+            user_info.avatar
+        from user
+        left join user_info on user.id = user_info.user_id
+        where user.username like concat('%',#{text},'%')
+        or user_info.email like concat('%',#{text},'%')
+        or user.authority like concat('%',#{text},'%')
+        or user.create_at like concat('%',#{text},'%')
+    </select>
+
+</mapper>

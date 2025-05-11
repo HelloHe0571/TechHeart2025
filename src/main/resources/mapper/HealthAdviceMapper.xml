@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.core.TecHeart.mapper.HealthAdviceMapper">
+
+    <resultMap id="BaseResultMap" type="com.core.TecHeart.entity.HealthAdvice">
+        <id column="advice_id" property="adviceId" />
+        <result column="user_id" property="userId" />
+        <result column="advice_text" property="adviceText" />
+        <result column="priority_level" property="priorityLevel" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <insert id="insertAdvice" useGeneratedKeys="true" keyProperty="adviceId">
+        INSERT INTO health_advice
+        (user_id, advice_text, priority_level, created_at, updated_at)
+        VALUES
+        (#{userId}, #{adviceText}, #{priorityLevel}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="updateAdvice">
+        UPDATE health_advice
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="adviceText != null">advice_text = #{adviceText},</if>
+            <if test="priorityLevel != null">priority_level = #{priorityLevel},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt}</if>
+        </set>
+        WHERE advice_id = #{adviceId}
+    </update>
+
+    <delete id="deleteAdvice">
+        DELETE FROM health_advice WHERE advice_id = #{adviceId}
+    </delete>
+
+    <select id="selectAdviceById" resultMap="BaseResultMap">
+        SELECT * FROM health_advice WHERE advice_id = #{adviceId}
+    </select>
+
+    <select id="selectAllAdvices" resultMap="BaseResultMap">
+        SELECT * FROM health_advice
+    </select>
+
+    <select id="selectAdvicesByUserId" resultMap="BaseResultMap">
+        SELECT * FROM health_advice WHERE user_id = #{userId}
+    </select>
+</mapper>

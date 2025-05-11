@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.core.TecHeart.mapper.BloodPressureMapper">
+
+    <resultMap id="bpResultMap" type="com.core.TecHeart.entity.BloodPressure">
+        <id property="bpId" column="bp_id"/>
+        <result property="metricId" column="metric_id"/>
+        <result property="systolic" column="systolic"/>
+        <result property="diastolic" column="diastolic"/>
+        <result property="heartRate" column="heart_rate"/>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.core.TecHeart.entity.BloodPressure"
+            useGeneratedKeys="true" keyProperty="bpId">
+        INSERT INTO blood_pressure (
+        metric_id, systolic, diastolic, heart_rate
+        ) VALUES (
+        #{metricId}, #{systolic}, #{diastolic}, #{heartRate}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.core.TecHeart.entity.BloodPressure">
+        UPDATE blood_pressure
+        <set>
+            <if test="systolic != null">systolic = #{systolic},</if>
+            <if test="diastolic != null">diastolic = #{diastolic},</if>
+            <if test="heartRate != null">heart_rate = #{heartRate}</if>
+        </set>
+        WHERE bp_id = #{bpId}
+    </update>
+
+    <!-- 根据metricId查询 -->
+    <select id="selectByMetricId" resultMap="bpResultMap">
+        SELECT * FROM blood_pressure
+        WHERE metric_id = #{metricId}
+    </select>
+
+</mapper>

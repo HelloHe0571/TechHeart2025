@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.core.TecHeart.mapper.HealthNoticeMapper">
+
+    <resultMap id="BaseResultMap" type="com.core.TecHeart.entity.HealthNotice">
+        <id column="notice_id" property="noticeId" />
+        <result column="user_id" property="userId" />
+        <result column="notice_type" property="noticeType" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="effective_time" property="effectiveTime" />
+        <result column="status" property="status" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <select id="selectAllNotices" resultMap="BaseResultMap">
+        SELECT * FROM health_notices
+    </select>
+
+    <select id="getNoticeById" resultMap="BaseResultMap">
+        SELECT * FROM health_notices WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertNotice" useGeneratedKeys="true" keyProperty="noticeId">
+        INSERT INTO health_notices
+        (user_id, notice_type,  title, content,
+        effective_time, status, created_at, updated_at)
+        VALUES
+        (#{userId}, #{noticeType}, #{title}, #{content},
+        #{effectiveTime}, #{status}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="updateNotice">
+        UPDATE health_notices
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="noticeType != null">notice_type = #{noticeType},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="effectiveTime != null">effective_time = #{effectiveTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt}</if>
+        </set>
+        WHERE notice_id = #{noticeId}
+    </update>
+
+    <delete id="deleteNotice">
+        DELETE FROM health_notices WHERE notice_id = #{noticeId}
+    </delete>
+</mapper>

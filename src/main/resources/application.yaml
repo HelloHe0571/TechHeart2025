@@ -1,0 +1,44 @@
+langchain4j:
+  open-ai:
+    chat-model:
+      # ???? KEY?????????? KEY
+      api-key: sk-c952ac79215a466c9cd95a3623e1e42d
+      model-name: qwen-plus
+      # ????OpenAI?????base_url?https://dashscope.aliyuncs.com/compatible-mode/v1
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+
+deepseek:
+  api-key: sk-3c914792c3934133b580fd5f55275a7a  # 必填项：你的 API 密钥
+  model: deepseek-reasoner
+  base-url: https://api.deepseek.com  # 可选，默认为官方 API 地址
+
+server:
+  port: 8080
+
+# JSON配置，设定不对未知字段和空值字段进行序列化节省流量
+spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+  # MySQL数据库地址和账户配置（根据自己实际情况进行填写）
+  datasource:
+    url: jdbc:mysql://localhost:3306/techeart?allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+  mvc:
+    static-path-pattern: /uploads/**
+  web:
+    resources:
+      static-locations: file:D:/uploads/
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+# 知识库文档存储根目录
+knowledge:
+  storage-path: C:\Users\86181\Desktop\课程资料\项目\TecHeart智心伴侣\knowledge

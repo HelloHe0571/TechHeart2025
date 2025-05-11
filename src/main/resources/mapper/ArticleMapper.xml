@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.core.TecHeart.mapper.ArticleMapper">
+
+    <resultMap id="BaseResultMap" type="com.core.TecHeart.entity.Article">
+        <id column="article_id" property="articleId" />
+        <result column="title" property="title" />
+        <result column="category_id" property="categoryId" />
+        <result column="category" property="category" />
+        <result column="cover_url" property="coverUrl" />
+        <result column="summary" property="summary" />
+        <result column="content" property="content" />
+        <result column="tags" property="tags" />
+        <result column="publish_time" property="publishTime" />
+        <result column="references" property="references" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <insert id="insertArticle" useGeneratedKeys="true" keyProperty="articleId">
+        INSERT INTO articles
+        (title, category_id, category, cover_url, summary, content,
+        tags, publish_time, `references`, created_at, updated_at)
+        VALUES
+        (#{title}, #{categoryId}, #{category}, #{coverUrl}, #{summary}, #{content},
+        #{tags}, #{publishTime}, #{references}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="updateArticle">
+        UPDATE articles
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="coverUrl != null">cover_url = #{coverUrl},</if>
+            <if test="summary != null">summary = #{summary},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="publishTime != null">publish_time = #{publishTime},</if>
+            <if test="references != null">`references` = #{references},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt}</if>
+        </set>
+        WHERE article_id = #{articleId}
+    </update>
+
+    <delete id="deleteArticle">
+        DELETE FROM articles WHERE article_id = #{articleId}
+    </delete>
+
+    <select id="selectArticleById" resultMap="BaseResultMap">
+        SELECT * FROM articles WHERE article_id = #{articleId}
+    </select>
+
+    <select id="selectAllArticles" resultMap="BaseResultMap">
+        SELECT * FROM articles ORDER BY publish_time DESC
+    </select>
+
+    <select id="searchArticles" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM articles
+        <where>
+            <if test="keyword != null">
+                (title LIKE CONCAT('%', #{keyword}, '%')
+                OR summary LIKE CONCAT('%', #{keyword}, '%')
+                OR content LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="tag != null">
+                AND tags LIKE CONCAT('%', #{tag}, '%')
+            </if>
+        </where>
+        ORDER BY publish_time DESC
+    </select>
+
+    <select id="selectByCategory" resultMap="BaseResultMap">
+        SELECT * FROM articles
+        WHERE category_id = #{categoryId}
+        ORDER BY publish_time DESC
+    </select>
+
+    <select id="selectLatestArticles" resultMap="BaseResultMap">
+        SELECT * FROM articles
+        ORDER BY publish_time DESC
+        LIMIT #{limit}
+    </select>
+</mapper>

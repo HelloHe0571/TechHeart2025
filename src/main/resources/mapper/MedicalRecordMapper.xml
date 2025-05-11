@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.core.TecHeart.mapper.MedicalRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.core.TecHeart.entity.MedicalRecord">
+        <id column="record_id" property="recordId" />
+        <result column="user_id" property="userId" />
+        <result column="record_date" property="recordDate" />
+        <result column="hospital" property="hospital" />
+        <result column="diagnosis_name" property="diagnosisName" />
+        <result column="diagnosis_text" property="diagnosisText" />
+        <result column="status" property="status" />
+        <result column="status_type" property="statusType" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <select id="selectAllRecords" resultMap="BaseResultMap">
+        SELECT * FROM medical_records
+    </select>
+
+    <select id="getRecordById" resultMap="BaseResultMap">
+        SELECT * FROM medical_records WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="recordId">
+        INSERT INTO medical_records
+        (user_id, record_date, hospital, diagnosis_name,
+        diagnosis_text, status, status_type, created_at, updated_at)
+        VALUES
+        (#{userId}, #{recordDate}, #{hospital}, #{diagnosisName},
+        #{diagnosisText}, #{status}, #{statusType}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="updateRecord">
+        UPDATE medical_records
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="hospital != null">hospital = #{hospital},</if>
+            <if test="diagnosisName != null">diagnosis_name = #{diagnosisName},</if>
+            <if test="diagnosisText != null">diagnosis_text = #{diagnosisText},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusType != null">status_type = #{statusType},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt}</if>
+        </set>
+        WHERE record_id = #{recordId}
+    </update>
+
+    <delete id="deleteRecord">
+        DELETE FROM medical_records WHERE record_id = #{recordId}
+    </delete>
+</mapper>

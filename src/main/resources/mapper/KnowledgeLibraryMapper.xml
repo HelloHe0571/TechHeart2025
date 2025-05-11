@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.core.TecHeart.mapper.KnowledgeLibraryMapper">
+
+    <resultMap id="BaseResultMap" type="com.core.TecHeart.entity.KnowledgeLibrary">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="name" property="name" />
+        <result column="description" property="description" />
+        <result column="is_active" property="isActive" />
+        <result column="doc_count" property="docCount" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_library
+        (user_id, name, description, is_active, doc_count, created_at, updated_at)
+        VALUES
+        (#{userId}, #{name}, #{description}, #{isActive}, #{docCount}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE knowledge_library
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM knowledge_library WHERE id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM knowledge_library WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM knowledge_library ORDER BY created_at DESC
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT * FROM knowledge_library
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="updateDocCount">
+        UPDATE knowledge_library
+        SET doc_count = doc_count + #{increment},
+        updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="toggleStatus">
+        UPDATE knowledge_library
+        SET is_active = #{status},
+        updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="disableOthers">
+        UPDATE knowledge_library
+        SET is_active = 0,
+        updated_at = NOW()
+        WHERE id != #{currentId}
+    </update>
+
+    <select id="getActiveLibrary" resultType="String">
+        SELECT name FROM knowledge_library WHERE is_active = 1 LIMIT 1
+    </select>
+</mapper>

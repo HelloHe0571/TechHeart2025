@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.core.TecHeart.mapper.ChatMessageMapper">
+
+    <resultMap id="messageResultMap" type="com.core.TecHeart.entity.ChatMessage">
+        <id property="messageId" column="message_id" />
+        <result property="sessionId" column="session_id"/>
+        <result property="content" column="content"/>
+        <result property="isAi" column="is_ai"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="messageType" column="message_type"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.core.TecHeart.entity.ChatMessage"
+            useGeneratedKeys="true" keyProperty="messageId">
+        INSERT INTO chat_messages (
+        session_id, content, is_ai,
+        created_at, message_type
+        ) VALUES (
+        #{sessionId}, #{content}, #{isAi},
+        #{createdAt}, #{messageType}
+        )
+    </insert>
+
+    <select id="selectBySessionId" resultMap="messageResultMap">
+        SELECT * FROM chat_messages
+        WHERE session_id = #{sessionId}
+        ORDER BY created_at ASC
+    </select>
+
+    <delete id="deleteBySessionId">
+        DELETE FROM chat_messages WHERE session_id = #{sessionId}
+    </delete>
+
+</mapper>
